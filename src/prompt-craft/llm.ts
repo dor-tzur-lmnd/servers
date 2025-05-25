@@ -19,7 +19,7 @@ function randomString(): string {
 }
 
 // Model constant - matches what's used in llmnd
-const DEFAULT_MODEL = "bedrock/claude-opus-4-20250514";
+const DEFAULT_MODEL = "anthropic/claude-opus-4-20250514";
 
 export class VanillaOpenAIService {
   private openai: OpenAI;
