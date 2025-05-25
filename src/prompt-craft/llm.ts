@@ -1,6 +1,13 @@
 import OpenAI from "openai";
-import { randomString } from "@lemonade-hq/cantina-core";
-import { ModelNames } from "@lemonade-hq/llmnd";
+
+// Simple random string generator for dummy API key
+// (Nexus handles actual authentication)
+function randomString(): string {
+  return Math.random().toString(36).substring(2, 15);
+}
+
+// Model constant - matches what's used in llmnd
+const GPT_4O_MODEL = "gpt-4o";
 
 export class VanillaOpenAIService {
   private openai: OpenAI;
@@ -19,26 +26,47 @@ export class VanillaOpenAIService {
       return baseUrlEnvValue;
     }
 
-    if (this.appContext.isProdLikeStage()) {
+    // Check NODE_ENV to determine stage
+    const isProdLike =
+      process.env.NODE_ENV === "production" ||
+      process.env.STAGE === "production";
+
+    if (isProdLike) {
       return "https://nexus-production.lmndprod.com";
     }
 
     return "https://nexus-master.lmndstaging.com";
   }
 
-  async chat(message: string): Promise<string> {
+  async chat(message: string, systemPrompt?: string): Promise<string> {
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [];
+
+    if (systemPrompt) {
+      messages.push({ role: "system", content: systemPrompt });
+    }
+
+    messages.push({ role: "user", content: message });
+
     const completion = await this.openai.chat.completions.create({
-      model: ModelNames.OpenAi.Gpt4o,
-      messages: [{ role: "user", content: message }],
+      model: GPT_4O_MODEL,
+      messages,
     });
 
     return completion.choices[0].message.content ?? "";
   }
 
-  async streamChat(message: string): Promise<void> {
+  async streamChat(message: string, systemPrompt?: string): Promise<void> {
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [];
+
+    if (systemPrompt) {
+      messages.push({ role: "system", content: systemPrompt });
+    }
+
+    messages.push({ role: "user", content: message });
+
     const stream = await this.openai.chat.completions.create({
-      model: ModelNames.OpenAi.Gpt4o,
-      messages: [{ role: "user", content: message }],
+      model: GPT_4O_MODEL,
+      messages,
       stream: true,
     });
 

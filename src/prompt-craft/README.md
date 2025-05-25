@@ -29,9 +29,8 @@ Analyzes and enhances a prompt using expert prompt engineering principles.
 
 ### Environment Variables
 
-- `OPENAI_API_KEY`: Your OpenAI API key (required)
-- `OPENAI_MODEL`: The model to use (default: "gpt-4")
-- `LLM_BASE_URL` or `OPENAI_BASE_URL`: Custom API endpoint (optional)
+- `LLM_BASE_URL` or `OPENAI_BASE_URL`: Custom LLM endpoint (optional, defaults to internal Nexus gateway)
+- `NODE_ENV` or `STAGE`: Set to "production" to use production Nexus endpoint
 
 ### Usage with Claude Desktop
 
@@ -45,10 +44,7 @@ Add this to your `claude_desktop_config.json`:
       "args": [
         "-y",
         "@modelcontextprotocol/server-prompt-craft"
-      ],
-      "env": {
-        "OPENAI_API_KEY": "your-api-key-here"
-      }
+      ]
     }
   }
 }
@@ -67,10 +63,7 @@ Add this to your VS Code settings or `.vscode/mcp.json`:
         "args": [
           "-y",
           "@modelcontextprotocol/server-prompt-craft"
-        ],
-        "env": {
-          "OPENAI_API_KEY": "your-api-key-here"
-        }
+        ]
       }
     }
   }
