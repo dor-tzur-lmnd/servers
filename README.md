@@ -25,6 +25,7 @@ These servers aim to demonstrate MCP features and the TypeScript and Python SDKs
 - **[Google Maps](src/google-maps)** - Location services, directions, and place details
 - **[Memory](src/memory)** - Knowledge graph-based persistent memory system
 - **[PostgreSQL](src/postgres)** - Read-only database access with schema inspection
+- **[PromptCraft](src/prompt-craft)** - Enhance prompts using the 10-Layer Architecture from Prompt Engineering Guide V2
 - **[Puppeteer](src/puppeteer)** - Browser automation and web scraping
 - **[Redis](src/redis)** - Interact with Redis key-value stores
 - **[Sentry](src/sentry)** - Retrieving and analyzing issues from Sentry.io
