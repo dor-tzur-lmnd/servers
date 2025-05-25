@@ -19,7 +19,7 @@ function randomString(): string {
 }
 
 // Model constant - matches what's used in llmnd
-const GPT_4O_MODEL = "gpt-4o";
+const DEFAULT_MODEL = "bedrock/claude-opus-4-20250514";
 
 export class VanillaOpenAIService {
   private openai: OpenAI;
@@ -60,7 +60,7 @@ export class VanillaOpenAIService {
     messages.push({ role: "user", content: message });
 
     const completion = await this.openai.chat.completions.create({
-      model: GPT_4O_MODEL,
+      model: DEFAULT_MODEL,
       messages,
     });
 
