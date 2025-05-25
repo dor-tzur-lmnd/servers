@@ -77,7 +77,7 @@ export class VanillaOpenAIService {
     messages.push({ role: "user", content: message });
 
     const stream = await this.openai.chat.completions.create({
-      model: GPT_4O_MODEL,
+      model: DEFAULT_MODEL,
       messages,
       stream: true,
     });
