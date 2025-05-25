@@ -1,3 +1,15 @@
+/**
+ * LLM Service for Nexus Gateway Integration
+ *
+ * This service connects to Lemonade's internal Nexus LLM gateway.
+ * Note: We use inline implementations for randomString and model constants
+ * instead of @lemonade-hq packages to avoid cantina directory structure
+ * requirements that don't apply to standalone MCP servers.
+ *
+ * The Nexus gateway handles all authentication, so the API key is just
+ * a dummy value.
+ */
+
 import OpenAI from "openai";
 
 // Simple random string generator for dummy API key
