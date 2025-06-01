@@ -21,6 +21,7 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
+    "@lemonade-hq/llmnd": "^1.346.2",
     "@modelcontextprotocol/sdk": "1.0.1",
     "openai": "^4.47.1"
   },

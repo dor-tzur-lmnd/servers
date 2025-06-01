@@ -9,7 +9,7 @@
  * The Nexus gateway handles all authentication, so the API key is just
  * a dummy value.
  */
-
+import { LLMClient } from "@lemonade-hq/llmnd";
 import OpenAI from "openai";
 
 // Simple random string generator for dummy API key
@@ -26,8 +26,10 @@ interface LLMOptions {
   maxTokens?: number;
   // Note: thinking parameters are included for future compatibility
   // but are not currently supported by Anthropic models through Nexus
-  thinkingEnabled?: boolean;
-  thinkingBudget?: number;
+  thinking?: {
+    type?: "enabled" | "disabled";
+    budgetTokens?: number;
+  };
 }
 
 export class VanillaOpenAIService {
@@ -46,8 +48,10 @@ export class VanillaOpenAIService {
     this.defaultOptions = {
       temperature: options?.temperature ?? 1.0,
       maxTokens: options?.maxTokens ?? 32000,
-      thinkingEnabled: options?.thinkingEnabled ?? true,
-      thinkingBudget: options?.thinkingBudget ?? 16000,
+      thinking: {
+        type: options?.thinking?.type ?? "enabled",
+        budgetTokens: options?.thinking?.budgetTokens ?? 24000,
+      },
     };
   }
 
@@ -88,6 +92,14 @@ export class VanillaOpenAIService {
       messages,
       temperature: options?.temperature ?? this.defaultOptions.temperature,
       max_tokens: options?.maxTokens ?? this.defaultOptions.maxTokens,
+
+      // @ts-ignore
+      thinking: {
+        type: options?.thinking?.type ?? this.defaultOptions.thinking.type,
+        budget_tokens:
+          options?.thinking?.budgetTokens ??
+          this.defaultOptions.thinking.budgetTokens,
+      },
     });
 
     return completion.choices[0].message.content ?? "";
@@ -106,13 +118,13 @@ export class VanillaOpenAIService {
 
     messages.push({ role: "user", content: message });
 
-    const stream = await this.openai.chat.completions.create({
+    const stream = (await this.openai.chat.completions.create({
       model: DEFAULT_MODEL,
       messages,
       stream: true,
       temperature: options?.temperature ?? this.defaultOptions.temperature,
       max_tokens: options?.maxTokens ?? this.defaultOptions.maxTokens,
-    }) as AsyncIterable<OpenAI.Chat.Completions.ChatCompletionChunk>;
+    })) as AsyncIterable<OpenAI.Chat.Completions.ChatCompletionChunk>;
 
     for await (const chunk of stream) {
       process.stdout.write(chunk.choices[0]?.delta?.content ?? "");
